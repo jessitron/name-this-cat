@@ -1,0 +1,26 @@
+{
+  "name": "name-this-cat",
+  "version": "1.0.0",
+  "description": "A vulnerable web site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessitron/name-this-cat.git"
+  },
+  "keywords": [
+    "demo"
+  ],
+  "author": "jessitron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jessitron/name-this-cat/issues"
+  },
+  "homepage": "https://github.com/jessitron/name-this-cat#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
