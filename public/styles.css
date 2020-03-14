@@ -1,0 +1,12 @@
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.catpicture {
+   margin: 20px;
+   padding: 10px;
+   border: 2px brown double;
+   height: 60vh;
+}
