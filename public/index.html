@@ -8,11 +8,17 @@
     <h1>Name This Cat</h1>
     <form action="name" method="post" class="form-example">
         <div class="form-example">
-            <label for="name">Enter your name: </label>
+            <label for="name">Enter a name for the cat: </label>
             <input type="text" name="name" id="name" required>
         </div>
     </form>
-    <img class="catpicture" src="images/pixie.jpg">
+    <img id="picture" class="catpicture" src="images/pixie.jpg">
+    <script>   (function () {
+            const picture = new URL(window.location).searchParams.get("picture")
+            if (picture) {
+                document.getElementById("picture").src = "output-images/" + picture + ".jpg"
+            }
+        })();</script>
 </body>
 
 </html>
