@@ -11,10 +11,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post('/name', (req, res) => {
     const catName = req.body.name;
-    if (catName.includes(`"`)) {
-        res.status(403).send("No quotes allowed");
-        return;
-    }
     const outputName = hashOfName(catName);
     const command = convertImageToImageWithText(catName, outputName);
     console.log("Running: " + command);
