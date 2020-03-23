@@ -31,7 +31,8 @@ function convertImageToImageWithText(catName, outputName) {
     const inputPath = "public/images/pixie.jpg";
     const outputPath = "public/output-images/" + outputName + ".jpg"
     return `convert ${inputPath} \
-            -gravity south -stroke '#000C' -strokewidth 2 -pointsize 100 -font StayPuft \
+            -gravity south -stroke '#000C' -strokewidth 2 -pointsize 100 \
+            -font StayPuft \
             -annotate 0 "${catName}" \
             -stroke none -fill white \
             -annotate 0 "${catName}" \
