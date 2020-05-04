@@ -7,31 +7,25 @@ const port = 3000;
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
 
-const CHARACTERS_THAT_FIT_ON_THE_PICTURE = 30;
+const CHARACTERS_THAT_FIT_ON_THE_IMAGE = 30;
 
 app.post('/name', (req, res) => {
     const catName = req.body.name;
 
-    if (!/[a-zA-Z]/.test(catName) || catName.length > CHARACTERS_THAT_FIT_ON_THE_PICTURE) {
+    if (!/[a-zA-Z]/.test(catName) || catName.length > CHARACTERS_THAT_FIT_ON_THE_IMAGE) {
         res.status(400).send("I don't like that name");
         return;
     }
 
-    createNamedCatPicture(catName, (err, outputName) => {
-        res.redirect("/?picture=" + outputName);
-    });
-});
-
-function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
     console.log("Running: " + arguments);
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
             console.error(stderr);
-            cb(err, outputName);
+            res.redirect("/?picture=" + outputName);
         });
-}
+});
 
 app.get('/catPicture', (req, res) => {
     const catName = req.query.name;
@@ -40,9 +34,14 @@ app.get('/catPicture', (req, res) => {
         res.status(400).send("Please specify 'name' as a URL parameter")
     }
 
-    createNamedCatPicture(catName, (err, outputName) => {
-        res.redirect("/output-images/" + outputName + ".jpg");
-    });
+    const outputName = hashOfName(catName);
+    const arguments = convertImageToImageWithText(catName, outputName);
+    console.log("Running: " + arguments);
+    child_process.execFile("convert", arguments,
+        (err, stdout, stderr) => {
+            console.error(stderr);
+            res.redirect("/output-images/" + outputName + ".jpg");
+        });
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
