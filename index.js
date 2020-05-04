@@ -4,11 +4,9 @@ const child_process = require('child_process');
 const CatName = require('./CatName')
 const app = express();
 const port = 3000;
-const cors = require('cors');
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 
 app.post('/name', (req, res) => {
     const catName = new CatName(req.body.name);
