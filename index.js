@@ -16,9 +16,14 @@ app.post('/name', (req, res) => {
     });
 });
 
+/**
+ * 
+ * @param {CatName} catName name to place on picture
+ * @param {function(err, outputName: string): void} cb called with an error or the outputName of new picture
+ */
 function createNamedCatPicture(catName, cb) {
-    const outputName = hashOfName(catName);
-    const arguments = convertImageToImageWithText(catName, outputName);
+    const outputName = hashOfName(catName.text);
+    const arguments = convertImageToImageWithText(catName.text, outputName);
     console.log("Running: " + arguments);
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
@@ -28,13 +33,13 @@ function createNamedCatPicture(catName, cb) {
 }
 
 app.get('/catPicture', (req, res) => {
-    const catName = req.query.name;
+    const nameText = req.query.name;
 
-    if (!catName) {
+    if (!nameText) {
         res.status(400).send("Please specify 'name' as a URL parameter")
     }
 
-    createNamedCatPicture(catName, (err, outputName) => {
+    createNamedCatPicture(new CatName(nameText), (err, outputName) => {
         res.redirect("/output-images/" + outputName + ".jpg");
     });
 });
