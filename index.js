@@ -40,7 +40,7 @@ app.get('/catPicture', (req, res) => {
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
             console.error(stderr);
-            res.redirect("/?picture=" + outputName);
+            res.redirect("/output-images/" + outputName + ".jpg");
         });
 });
 
