@@ -1,21 +1,16 @@
 const express = require('express');
 const crypto = require('crypto');
 const child_process = require('child_process');
+const CatName = require('./CatName')
 const app = express();
 const port = 3000;
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
 
-const CHARACTERS_THAT_FIT_ON_THE_IMAGE = 30;
 
 app.post('/name', (req, res) => {
-    const catName = req.body.name;
-
-    if (!/[a-zA-Z]/.test(catName) || catName.length > CHARACTERS_THAT_FIT_ON_THE_IMAGE) {
-        res.status(400).send("I don't like that name");
-        return;
-    }
+    const catName = new CatName(req.body.name);
 
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
