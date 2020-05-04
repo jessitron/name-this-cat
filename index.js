@@ -8,19 +8,24 @@ const port = 3000;
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
 
-
 app.post('/name', (req, res) => {
     const catName = new CatName(req.body.name);
 
+    createNamedCatPicture(catName, (err, outputName) => {
+        res.redirect("/?picture=" + outputName);
+    });
+});
+
+function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
     console.log("Running: " + arguments);
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
             console.error(stderr);
-            res.redirect("/?picture=" + outputName);
+            cb(err, outputName);
         });
-});
+}
 
 app.get('/catPicture', (req, res) => {
     const catName = req.query.name;
@@ -29,14 +34,9 @@ app.get('/catPicture', (req, res) => {
         res.status(400).send("Please specify 'name' as a URL parameter")
     }
 
-    const outputName = hashOfName(catName);
-    const arguments = convertImageToImageWithText(catName, outputName);
-    console.log("Running: " + arguments);
-    child_process.execFile("convert", arguments,
-        (err, stdout, stderr) => {
-            console.error(stderr);
-            res.redirect("/output-images/" + outputName + ".jpg");
-        });
+    createNamedCatPicture(catName, (err, outputName) => {
+        res.redirect("/output-images/" + outputName + ".jpg");
+    });
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
