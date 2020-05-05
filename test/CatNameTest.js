@@ -14,7 +14,7 @@ describe('CatName', function () {
     });
   });
 
-  it('keeps the cat name safe', () => {
+  it('keeps the cat name', () => {
     const pixie = new CatName("Pixie");
     assert.equal(pixie.text, "Pixie");
   })
