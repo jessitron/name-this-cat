@@ -4,7 +4,7 @@
   "description": "A vulnerable web site",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node index.js"
   },
   "repository": {
@@ -22,5 +22,8 @@
   "homepage": "https://github.com/jessitron/name-this-cat#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2"
   }
 }
