@@ -18,8 +18,8 @@ app.post('/name', (req, res) => {
 
 /**
  * 
- * @param {CatName} catName name to place on picture
- * @param {function(err, outputName: string): void} cb called with an error or the outputName of new picture
+ * @param {CatName} catName 
+ * @param {*} cb 
  */
 function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName.text);
