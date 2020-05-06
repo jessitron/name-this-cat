@@ -1,7 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
 const child_process = require('child_process');
-const CatName = require('./CatName')
 const app = express();
 const port = 3000;
 
@@ -9,21 +8,16 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
 
 app.post('/name', (req, res) => {
-    const catName = new CatName(req.body.name);
+    const catName = req.body.name;
 
     createNamedCatPicture(catName, (err, outputName) => {
         res.redirect("/?picture=" + outputName);
     });
 });
 
-/**
- * 
- * @param {CatName} catName 
- * @param {*} cb 
- */
 function createNamedCatPicture(catName, cb) {
-    const outputName = hashOfName(catName.text);
-    const arguments = convertImageToImageWithText(catName.text, outputName);
+    const outputName = hashOfName(catName);
+    const arguments = convertImageToImageWithText(catName, outputName);
     console.log("Running: " + arguments);
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
@@ -31,18 +25,6 @@ function createNamedCatPicture(catName, cb) {
             cb(err, outputName);
         });
 }
-
-app.get('/catPicture', (req, res) => {
-    const nameText = req.query.name;
-
-    if (!nameText) {
-        res.status(400).send("Please specify 'name' as a URL parameter")
-    }
-
-    createNamedCatPicture(new CatName(nameText), (err, outputName) => {
-        res.redirect("/output-images/" + outputName + ".jpg");
-    });
-});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
