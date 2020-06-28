@@ -15,6 +15,11 @@ app.post('/name', (req, res) => {
     });
 });
 
+app.get('/', (req, res) => {
+    const pictureLocation = req.param("picture");
+    res.send(populateIndex(pictureLocation))
+});
+
 function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
@@ -50,4 +55,26 @@ function convertImageToImageWithText(catName, outputName) {
         catName,
         outputPath
     ];
+}
+
+
+function populateIndex(catPictureFilename) {
+    return `<html>
+  
+    <head>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    
+    <body>
+        <h1>Name This Cat</h1>
+        <form action="name" method="post" class="form-example">
+            <div class="form-example">
+                <label for="name">Enter a name for the cat: </label>
+                <input type="text" name="name" id="name" required>
+            </div>
+        </form>
+        <img id="picture" class="catpicture" src="output-images/${catPictureFilename}.jpg">
+    </body>
+    
+    </html>`
 }
