@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post('/name', (req, res) => {
     const catName = req.body.name;
+    res.cookie("catName", catName); // gratuitously set cookie
 
     createNamedCatPicture(catName, (err, outputName) => {
         res.redirect("/?picture=" + outputName);
@@ -79,6 +80,6 @@ function populateIndex(catPictureFilename) {
         </form>
         <img id="picture" class="catpicture" src="${catPictureFilename}">
     </body>
-    
+    <script src="gratuitouslySetStorage.js"></script>
     </html>`
 }
