@@ -5,24 +5,8 @@ const child_process = require('child_process');
 const app = express();
 const port = 3000;
 
-app.use(csp({
-    directives: {
-        scriptSrc: ["'self'"],
-        reportUri: `http://localhost:${port}/csp-report`
-    }
-}));
-
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
-
-app.post('/name', (req, res) => {
-    const catName = req.body.name;
-    res.cookie("catName", catName); // gratuitously set cookie
-
-    createNamedCatPicture(catName, (err, outputName) => {
-        res.redirect("/?picture=" + outputName);
-    });
-});
 
 app.get('/', (req, res) => {
     let pictureLocation = "images/pixie.jpg";
@@ -33,14 +17,23 @@ app.get('/', (req, res) => {
     res.send(populateIndex(pictureLocation));
 });
 
+app.post('/name', (req, res) => {
+    const catName = req.body.name;
+    res.cookie("catName", catName); // gratuitously set cookie
+
+    createNamedCatPicture(catName, (err, outputName) => {
+        res.redirect("/?picture=" + outputName);
+    });
+});
+
 
 function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
-    console.log("Running: " + arguments);
+    console.log("Running: " + arguments.join(" "));
     child_process.execFile("convert", arguments,
         (err, stdout, stderr) => {
-            console.error(stderr);
+            console.error("Convert says: " + stderr);
             cb(err, outputName);
         });
 }
@@ -91,6 +84,7 @@ function populateIndex(catPictureFilename) {
     
     <body>
         <h1>Name This Cat</h1>
+        <main>
         <form action="name" method="post" class="form-example">
             <div class="form-example">
                 <label for="name">Enter a name for the cat: </label>
@@ -98,6 +92,7 @@ function populateIndex(catPictureFilename) {
             </div>
         </form>
         <img id="picture" class="catpicture" src="${catPictureFilename}">
+        </main>
     </body>
     <script src="gratuitouslySetStorage.js"></script>
     </html>`
