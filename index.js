@@ -16,8 +16,12 @@ app.post('/name', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    const pictureLocation = req.param("picture");
-    res.send(populateIndex(pictureLocation))
+    let pictureLocation = "images/pixie.jpg";
+    const catPictureFilename = req.query["picture"];
+    if (catPictureFilename) {
+        pictureLocation = `output-images/${catPictureFilename}.jpg`;
+    }
+    res.send(populateIndex(pictureLocation));
 });
 
 function createNamedCatPicture(catName, cb) {
@@ -31,7 +35,7 @@ function createNamedCatPicture(catName, cb) {
         });
 }
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Name This Cat on port ${port}!`))
 
 function hashOfName(catName) {
     return crypto.createHash('SHA1').update(catName).digest('hex');
@@ -73,7 +77,7 @@ function populateIndex(catPictureFilename) {
                 <input type="text" name="name" id="name" required>
             </div>
         </form>
-        <img id="picture" class="catpicture" src="output-images/${catPictureFilename}.jpg">
+        <img id="picture" class="catpicture" src="${catPictureFilename}">
     </body>
     
     </html>`
