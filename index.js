@@ -1,8 +1,16 @@
 const express = require('express');
 const crypto = require('crypto');
+const csp = require('helmet-csp')
 const child_process = require('child_process');
 const app = express();
 const port = 3000;
+
+app.use(csp({
+    directives: {
+        scriptSrc: ["'self'"],
+        reportUri: `http://localhost:${port}/csp-report`
+    }
+}));
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
@@ -25,6 +33,7 @@ app.get('/', (req, res) => {
     res.send(populateIndex(pictureLocation));
 });
 
+
 function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
@@ -35,6 +44,16 @@ function createNamedCatPicture(catName, cb) {
             cb(err, outputName);
         });
 }
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({
+    type: ['json', 'application/csp-report']
+}));
+app.post('/csp-report', (req, res) => {
+    console.log("CSP Report: " + JSON.stringify(req.body, null, 2));
+    res.send("Thanks");
+})
+
 
 app.listen(port, () => console.log(`Name This Cat on port ${port}!`))
 

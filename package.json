@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/jessitron/name-this-cat#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "helmet-csp": "^2.10.0"
   },
   "devDependencies": {
     "mocha": "^7.1.2"
