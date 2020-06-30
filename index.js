@@ -9,7 +9,7 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
-    let pictureLocation = "images/pixie.jpg";
+    let pictureLocation = "images/pincho.jpg";
     const catPictureFilename = req.query["picture"];
     if (catPictureFilename) {
         pictureLocation = `output-images/${catPictureFilename}.jpg`;
@@ -55,7 +55,7 @@ function hashOfName(catName) {
 }
 
 function convertImageToImageWithText(catName, outputName) {
-    const inputPath = "public/images/pixie.jpg";
+    const inputPath = "public/images/pincho.jpg";
     const outputPath = "public/output-images/" + outputName + ".jpg"
     return [
         inputPath,
