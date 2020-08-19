@@ -1,20 +1,12 @@
 const express = require('express');
 const crypto = require('crypto');
-const csp = require('helmet-csp');
+const csp = require('helmet-csp')
 const child_process = require('child_process');
 const app = express();
 const port = 3000;
-const CatName = require('./CatName');
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
-
-app.use(csp({
-    directives: {
-        scriptSrc: ["'self'"],
-        reportUri: `http://namethiscat.localhost:${port}/csp-report`
-    }
-}));
 
 app.get('/', (req, res) => {
     let pictureLocation = "images/pixie.jpg";
@@ -26,8 +18,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/name', (req, res) => {
-    const catName = new CatName(req.body.name);
-    res.cookie("catName", catName.stringValue); // gratuitously set cookie
+    const catName = req.body.name;
+    res.cookie("catName", catName); // gratuitously set cookie
 
     createNamedCatPicture(catName, (err, outputName) => {
         res.redirect("/?picture=" + outputName);
@@ -36,8 +28,8 @@ app.post('/name', (req, res) => {
 
 
 function createNamedCatPicture(catName, cb) {
-    const outputName = hashOfName(catName.stringValue);
-    const arguments = convertImageToImageWithText(catName.stringValue, outputName);
+    const outputName = hashOfName(catName);
+    const arguments = convertImageToImageWithText(catName, outputName);
     console.log("Running convert with: " + arguments);
     child_process.exec("convert " + arguments,
         (err, stdout, stderr) => {
@@ -50,8 +42,6 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json({
     type: ['json', 'application/csp-report']
 }));
-
-
 app.post('/csp-report', (req, res) => {
     console.log("CSP Report: " + JSON.stringify(req.body, null, 2));
     res.send("Thanks");
@@ -98,7 +88,7 @@ function populateIndex(catPictureFilename) {
                 <input type="text" name="name" id="name" required>
             </div>
         </form>
-        <img id="picture" class="catpicture" src="images/pixie.jpg">
+        <img id="picture" class="catpicture" src="${catPictureFilename}">
         </main>
     </body>
     <script src="gratuitouslySetStorage.js"></script>
