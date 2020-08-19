@@ -30,8 +30,8 @@ app.post('/name', (req, res) => {
 function createNamedCatPicture(catName, cb) {
     const outputName = hashOfName(catName);
     const arguments = convertImageToImageWithText(catName, outputName);
-    console.log("Running: " + arguments.join(" "));
-    child_process.execFile("convert", arguments,
+    console.log("Running convert with: " + arguments);
+    child_process.exec("convert " + arguments,
         (err, stdout, stderr) => {
             console.error("Convert says: " + stderr);
             cb(err, outputName);
@@ -57,21 +57,18 @@ function hashOfName(catName) {
 function convertImageToImageWithText(catName, outputName) {
     const inputPath = "public/images/pixie.jpg";
     const outputPath = "public/output-images/" + outputName + ".jpg"
-    return [
-        inputPath,
-        "-gravity", "south",
-        "-stroke", "#000C",
-        "-strokewidth", "2",
-        "-pointsize", "100",
-        "-font", "StayPuft",
-        "-annotate", "0",
-        catName,
-        "-stroke", "none",
-        "-fill", "white",
-        "-annotate", "0",
-        catName,
-        outputPath
-    ];
+    return inputPath +
+        " -gravity south" +
+        ` -stroke "#000C"` +
+        " -strokewidth 2" +
+        " -pointsize 100" +
+        " -font StayPuft" +
+        ` -annotate 0 "${catName}"` +
+        " -stroke none" +
+        " -fill white" +
+        " -annotate 0" +
+        ` "${catName}" ` +
+        outputPath;
 }
 
 
